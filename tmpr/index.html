@@ -1,0 +1,25 @@
+<script>
+  function getParameterByName(name, url = window.location.href) {
+      name = name.replace(/[\[\]]/g, '\\$&');
+      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+  if (document.cookie.includes("usev3"))
+  {
+    document.location.href="http://localhost:2681/?asin="+getParameterByName("asin")
+  }
+  else{
+    document.write("Redirecting...\nIf you are using a link that said [tamper] make sure you have the tampermonkey script installed.")
+    setTimeout(function(){
+      if (getParameterByName("asin") != null){
+        document.location.href = "https://www.amazon.com/gp/product/ajax/?autocart=1&asin="+getParameterByName("asin")+"&m=A2L77EE7U53NWQ&experienceId=aodAjaxMain"
+      }
+      if (getParameterByName("oid") != null){
+        document.location.href = "https://smile.amazon.com/gp/checkoutportal/enter-checkout.html?buyNow=1&skipCart=1&offeringID="+getParameterByName("oid")+"&&quantity=1"
+      }
+    },500)
+  }
+</script>
