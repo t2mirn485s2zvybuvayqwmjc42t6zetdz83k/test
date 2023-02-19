@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AWH Price Calculator</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://dogix.lol/api/dark.css">
+        <script>
+            function returnStringFromBasePrice(base_price, offset)
+            {
+                return `Base Price: ${base_price.toFixed(2)}<br>Like New: ${(base_price*(0.95+offset)).toFixed(2)}<br>Very Good: ${(base_price*(0.92+offset)).toFixed(2)}<br>Good: ${(base_price*(0.88+offset)).toFixed(2)}<br>Acceptable: ${(base_price*(0.75+offset)).toFixed(2)}`
+            }
+            function calculate()
+            {
+                let offset = document.getElementById("altmode").checked ? 0.04 : 0.00
+                console.log(offset)
+                var base_price = 0
+                if (document.getElementById("ln").value != "")
+                {
+                    base_price = Number(document.getElementById("ln").value) / (0.95 + offset)
+                }
+                if (document.getElementById("vg").value != "")
+                {
+                    base_price = Number(document.getElementById("vg").value) / (0.92 + offset)
+                }
+                if (document.getElementById("g").value != "")
+                {
+                    base_price = Number(document.getElementById("g").value) / (0.88 + offset)
+                }
+                if (document.getElementById("ac").value != "")
+                {
+                    base_price = Number(document.getElementById("ac").value) / (0.75 + offset)
+                }
+                if (document.getElementById("bp").value != "")
+                {
+                    base_price = Number(document.getElementById("bp").value)
+                }
+                document.getElementById("data").reset()
+                document.getElementById("output").innerHTML=returnStringFromBasePrice(base_price, offset)
+            }
+            function predict(){
+                let offset = document.getElementById("altmode").checked ? 0.04 : 0.00
+                console.log(offset)
+                let previous = Number(document.getElementById("bp2").value)
+                let current = Number(document.getElementById("bp1").value)
+                let increment = Number(Math.abs(previous-current).toFixed(2))
+                let time_until = Math.floor(current/increment)+1
+                var return_string = `The difference in base prices is ${increment}.<br><b>Assuming no price increases (best case scenario)</b>, this item will be at its lowest possible price in ${time_until} clearance cycles (around 8 days each), or about ${time_until*8} days`
+                for (var i = 0; i < time_until; i++)
+                {
+                    return_string = `${return_string}<br><br><b>Cycle ${i}</b><br>${returnStringFromBasePrice(current - increment*i, offset)}` 
+                }
+                document.getElementById("predictdata").reset()
+                document.getElementById("predict").innerHTML=return_string
+            }
+        </script>
+    </head>
+    <body>
+        <h1>AWH Price Calculator</h2>
+        <form id=data>
+            <p>
+                Like New: <input type="text" id="ln"><br>
+                Very Good: <input type="text" id="vg"><br>
+                Good: <input type="text" id="g"><br>
+                Acceptable: <input type="text" id="ac"><br>
+                Base Price: <input type="text" id="bp"><br>
+            </p>
+        </form>
+        <input type="checkbox" id=altmode>Alt Mode<br>
+        <input type="submit" onclick="calculate()" value="Calculate">
+        <p id=output>
+            Make sure to enter only numbers into the text boxes, no dollar signs.<br>
+            Only enter into one text box.<br>
+            If prices don't look completely accurate using historical data, try toggling the Alt Mode box.<br>
+            Predicted prices will appear here.
+        </p>
+        <hr>
+        <h1>AWH Price Predictor</h1>
+        <form id=predictdata>
+            <p>
+                Current Base Price: <input type="text" id="bp1"><br>
+                Previous Base Price: <input type="text" id="bp2"><br>
+            </p>
+        </form>
+        <input type="submit" onclick="predict()" value="Predict">
+        <p id=predict>
+            Enter two <b>base prices</b> from different times into the text box.<br>
+            Base prices can be found in clearance tracker or by using the price calculator.<br>
+            Using Discord search with a product link is recommended to find more data to use.<br>
+            If prices don't look completely accurate using historical data, try toggling the Alt Mode box.<br>
+            Predicted prices will appear here.
+        </p>
+    </body>
+</html>
